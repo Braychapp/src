@@ -991,17 +991,21 @@ LEDaddress:
 .type _bc_a5_tick_handler, %function @ Declares that the symbol is a function (not strictly required)
 
 .data
-a5_timeout: .word 0 @creating a variable for the timeout
-a5_delay: .word 0 @creating a variable for the delay
+a5_delay: .word 0 @creating a variable for the timeout
+a5_timeout: .word 0 @creating a variable for the delay
 
 .text
 _bc_a5_tick_handler:
-
+    push {lr}
+    
     ldr r2, =a5_timeout
     str r0, [r2] @storing r0 into a5_timeout
+
+    ldr r0, [r2]
+
     ldr r2, =a5_delay
     str r1, [r2] @storing r1 into a5_delay
-
+    
     @initializing the watchdog
     bl mes_InitIWDG @the timeout value should still be in r0
 
@@ -1009,6 +1013,7 @@ _bc_a5_tick_handler:
     bl mes_IWDGStart @this starts the watchdog
     @it is ok to be started here because the function in the system tick handler
     @will be called as soon as this hits bxlr
+    pop {lr}
 
 bx lr 
 
@@ -1030,6 +1035,10 @@ bx lr
 @ encoded function. Necessary for interlinking between ARM and THUMB code.
 .type _bc_a5_tick_check, %function @ Declares that the symbol is a function (not strictly required)
 
+.data
+current_delay: .word 0 @adding a variable to hold the current delay
+
+.text
 _bc_a5_tick_check:
     push {lr}
 
@@ -1050,42 +1059,26 @@ _bc_a5_tick_check:
     @for early testing only turning on an led if it gets here
     mov r0, #1 @moving 1 into r0
     bl BSP_LED_On
+    mov r0, #2
+    bl BSP_LED_On
+    mov r0, #2
+    bl BSP_LED_On
+    mov r0, #3
+    bl BSP_LED_On
+    mov r0, #4
+    bl BSP_LED_On
+    mov r0, #5
+    bl BSP_LED_On
+    mov r0, #6
+    bl BSP_LED_On
+    mov r0, #7
+    bl BSP_LED_On
 
     pop {lr}
     bx lr
 
 
 .size _bc_a5_tick_check, .-_bc_a5_tick_check
-
-
-.code 16 @ This directive selects the instruction set being generated.
-@ The value 16 selects Thumb, with the value 32 selecting ARM.
-.text @ Tell the assembler that the upcoming section is to be considered
-@ assembly language instructions - Code section (text -> ROM)
-@@ Function Header Block
-.align 2 @ Code alignment - 2^n alignment (n=2)
-@ This causes the assembler to use 4 byte alignment
-.syntax unified @ Sets the instruction set to the new unified ARM + THUMB
-@ instructions. The default is divided (separate instruction sets)
-.global _bc_watchdog_start @ Make the symbol name for the function visible to the linker
-.code 16 @ 16bit THUMB code (BOTH .code and .thumb_func are required)
-.thumb_func @ Specifies that the following symbol is the name of a THUMB
-@ encoded function. Necessary for interlinking between ARM and THUMB code.
-.type _bc_watchdog_start, %function @ Declares that the symbol is a function (not strictly required)
-
-_bc_watchdog_start:
-push {lr}
-
-
-
-
-bl mes_InitIWDG
-
-
-pop {lr}
-bx lr
-
-.size _bc_watchdog_start, .-+_bc_watchdog_start
 
 
 

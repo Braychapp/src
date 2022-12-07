@@ -286,7 +286,7 @@ return;
         delay = 2;
     }
 
-    _bc_a5_tick_handler(10, 10);    
+    _bc_a5_tick_handler(timeout, delay);    
 }
 ADD_CMD("_bcWatch", tickHandler,"run the function to start the watchdog function");
 
