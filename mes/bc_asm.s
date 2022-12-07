@@ -975,6 +975,29 @@ push {lr}
 LEDaddress:
 .word 0x48001014
 
+.code 16 @ This directive selects the instruction set being generated.
+@ The value 16 selects Thumb, with the value 32 selecting ARM.
+.text @ Tell the assembler that the upcoming section is to be considered
+@ assembly language instructions - Code section (text -> ROM)
+@@ Function Header Block
+.align 2 @ Code alignment - 2^n alignment (n=2)
+@ This causes the assembler to use 4 byte alignment
+.syntax unified @ Sets the instruction set to the new unified ARM + THUMB
+@ instructions. The default is divided (separate instruction sets)
+.global _bcWatch @ Make the symbol name for the function visible to the linker
+.code 16 @ 16bit THUMB code (BOTH .code and .thumb_func are required)
+.thumb_func @ Specifies that the following symbol is the name of a THUMB
+@ encoded function. Necessary for interlinking between ARM and THUMB code.
+.type _bcWatch, %function @ Declares that the symbol is a function (not strictly required)
+
+_bcWatch:
+push {lr}
+
+pop {lr}
+bx lr 
+
+
+.size CORRECT_LED, .-CORRECT_LED
 
 
 
