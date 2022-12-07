@@ -289,6 +289,3 @@ return;
     _bc_a5_tick_handler(10, 10);    
 }
 ADD_CMD("_bcWatch", tickHandler,"run the function to start the watchdog function");
-
-
-
