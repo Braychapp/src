@@ -1002,6 +1002,13 @@ _bc_a5_tick_handler:
     ldr r2, =a5_delay
     str r1, [r2] @storing r1 into a5_delay
 
+    @initializing the watchdog
+    bl mes_InitIWDG @the timeout value should still be in r0
+
+    @starting the watchdog
+    bl mes_IWDGStart @this starts the watchdog
+    @it is ok to be started here because the function in the system tick handler
+    @will be called as soon as this hits bxlr
 
 bx lr 
 
@@ -1060,14 +1067,20 @@ _bc_a5_tick_check:
 @ This causes the assembler to use 4 byte alignment
 .syntax unified @ Sets the instruction set to the new unified ARM + THUMB
 @ instructions. The default is divided (separate instruction sets)
-.global _bc_a5_tick_check @ Make the symbol name for the function visible to the linker
+.global _bc_watchdog_start @ Make the symbol name for the function visible to the linker
 .code 16 @ 16bit THUMB code (BOTH .code and .thumb_func are required)
 .thumb_func @ Specifies that the following symbol is the name of a THUMB
 @ encoded function. Necessary for interlinking between ARM and THUMB code.
-.type _bc_a5_tick_check, %function @ Declares that the symbol is a function (not strictly required)
+.type _bc_watchdog_start, %function @ Declares that the symbol is a function (not strictly required)
 
 _bc_watchdog_start:
 push {lr}
+
+
+
+
+bl mes_InitIWDG
+
 
 pop {lr}
 bx lr
