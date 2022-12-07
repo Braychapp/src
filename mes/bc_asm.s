@@ -984,20 +984,29 @@ LEDaddress:
 @ This causes the assembler to use 4 byte alignment
 .syntax unified @ Sets the instruction set to the new unified ARM + THUMB
 @ instructions. The default is divided (separate instruction sets)
-.global _bcWatch @ Make the symbol name for the function visible to the linker
+.global _bc_a5_tick_handler @ Make the symbol name for the function visible to the linker
 .code 16 @ 16bit THUMB code (BOTH .code and .thumb_func are required)
 .thumb_func @ Specifies that the following symbol is the name of a THUMB
 @ encoded function. Necessary for interlinking between ARM and THUMB code.
-.type _bcWatch, %function @ Declares that the symbol is a function (not strictly required)
+.type _bc_a5_tick_handler, %function @ Declares that the symbol is a function (not strictly required)
 
-_bcWatch:
-push {lr}
+.data
+a5_timeout: .word 0 @creating a variable for the timeout
+a5_delay: .word 0 @creating a variable for the delay
 
-pop {lr}
+.text
+_bc_a5_tick_handler:
+
+ldr r2, =a5_timeout
+str r0, [r2] @storing r0 into a5_timeout
+ldr r2, =a5_delay
+str r1, [r2] @storing r1 into a5_delay
+
+
 bx lr 
 
 
-.size CORRECT_LED, .-CORRECT_LED
+.size _bc_a5_tick_handler, .-_bc_a5_tick_handler
 
 
 
