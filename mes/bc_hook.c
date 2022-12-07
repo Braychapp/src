@@ -13,6 +13,7 @@
 void mes_InitIWDG(int refresh);
 void mes_IWDGStart(void);
 void mes_IWDGRefresh(void);
+int _bc_a5_tick_handler(int timeout, int delay);
 
 
 
@@ -254,5 +255,40 @@ void wdogTest(int action)
     mes_IWDGRefresh();
 }
 ADD_CMD("watch", wdogTest, "created to test the watchdog functions");
+
+int _bc_a5_tick_handler(int timeout, int delay);
+
+void tickHandler(int action)
+{
+if(action==CMD_SHORT_HELP) return;
+if(action==CMD_LONG_HELP) {
+printf("Tick Handler\n\n"
+"This command handles how the tick handler works with A5\n"
+);
+return;
+}
+//creating a variable of type uint32_t called delay and a regular int called fetch_status
+    uint32_t timeoutTimer;
+    int fetch_status1;
+    fetch_status1 = fetch_uint32_arg(&timeoutTimer);
+
+    if(fetch_status1) {
+    // Use a default value
+        timeoutTimer = 1000;
+    }   
+
+    uint32_t blinkDelay;
+    int fetch_status;
+    fetch_status = fetch_uint32_arg(&blinkDelay);
+
+    if(fetch_status) {
+        blinkDelay = 2;
+    }
+
+    printf("_bc_a5_tick_handler: %d\n", _bc_a5_tick_handler(timeoutTimer, blinkDelay));
+    
+}
+ADD_CMD("_bcWatch", tickHandler,"run the function to start the watchdog function");
+
 
 
