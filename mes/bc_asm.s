@@ -1029,16 +1029,23 @@ _bc_a5_tick_check:
     @checking values to see if anything has been loaded into them
 
     ldr r2, =a5_timeout
-    ldr r0, [r2]
-    ldr r2, =a5_delay
-    ldr r1, [r2]
+    ldr r4, [r2]
+    @ldr r2, =a5_delay
+    @ldr r5, [r2]
 
-    @checking if r0 is 0 or less than 0 and if it is we do nothing
+    @checking if r4 is 0 or less than 0 and if it is we do nothing
     @we don't need to check r1 because they should only change within the same function
-    subs r0, r0, #1 @#take 1 away from r0
+    subs r4, r4, #1 @#take 1 away from r0
 
     @if it's 0 or less than 0 we do nothing
     ble do_nothing
+
+    @for early testing only turning on an led if it gets here
+    mov r0, #1 @moving 1 into r0
+    bl BSP_LED_On
+
+    pop {lr}
+    bx lr
 
 
 .size _bc_a5_tick_check, .-_bc_a5_tick_check

@@ -121,10 +121,15 @@ void Error_Handler(void)
   }
 }
 
+void _bc_a5_tick_check(void);
+
 void SysTick_Handler(void)
 {
     HAL_IncTick();
     my_Tick();
+
+    //calling the tick handler function for a5
+    //_bc_a5_tick_check();
 }
 
 void EXTI0_IRQHandler(void)

@@ -289,3 +289,20 @@ return;
     _bc_a5_tick_handler(10, 10);    
 }
 ADD_CMD("_bcWatch", tickHandler,"run the function to start the watchdog function");
+
+
+int _bc_a5_tick_check();
+
+void ticks(int action)
+{
+if(action==CMD_SHORT_HELP) return;
+if(action==CMD_LONG_HELP) {
+printf("Ticks\n\n"
+"This command tests the function that is supposed to be inside the interrupt handler\n"
+);
+return;
+}
+//creating a variable of type uint32_t called delay and a regular int called fetch_status
+    _bc_a5_tick_check();    
+}
+ADD_CMD("TIKS", ticks,"run the function to start the watchdog function");
