@@ -14,7 +14,6 @@ const uint32_t numLEDs = sizeof(LEDs)/sizeof(LEDs[0]);
 
 /* Private function prototypes -----------------------------------------------*/
 static void SystemClock_Config(void);
-int _bc_a5_tick_handler(int timeout, int delay);
 
 int main(int argc, char **argv)
 {
@@ -122,7 +121,9 @@ void Error_Handler(void)
   }
 }
 
-void _bc_a5_tick_check(void);
+void _bc_a5_tick_handler(void);
+
+void _bc_a5_button_handler(void);
 
 void SysTick_Handler(void)
 {
@@ -130,12 +131,12 @@ void SysTick_Handler(void)
     my_Tick();
 
     //calling the tick handler function for a5
-    _bc_a5_tick_check();
+    _bc_a5_tick_handler();
 }
 
 void EXTI0_IRQHandler(void)
 {
-;
+_bc_a5_button_handler();
 HAL_GPIO_EXTI_IRQHandler(USER_BUTTON_PIN);
 }
 

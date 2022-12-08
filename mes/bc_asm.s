@@ -1071,8 +1071,8 @@ _bc_a5_tick_handler:
     ldr r2, =is_button_pressed
     ldr r3, [r2]
 
-    cmp r3, #0 @if the button was pressed
-
+    cmp r3, #0 @it will be 0 is it has not been pressed
+    bgt do_nothing
     @if the button has not been pushed
     bl refresh_watchdog    
 
@@ -1154,20 +1154,15 @@ refresh_watchdog:
 @ encoded function. Necessary for interlinking between ARM and THUMB code.
 .type _bc_a5_button_handler, %function @ Declares that the symbol is a function (not strictly required)
 
-bc_a5_button_handler:
-push {lr}
-    bl BSP_PB_GetState
-    cmp r0, #0 @if the button was not pressed
-    beq do_nothing
-    @else if the button was pressed
-
-    mov r3, #0 @moving 0 into r3 to indicate no more refreshing
-    ldr r2, =watchdog_refresh
+_bc_a5_button_handler:
+    push {lr}
+    mov r3, #1 @moving 0 into r3 to indicate no more refreshing
+    ldr r2, =is_button_pressed
     str r3, [r2]
 
     pop {lr}
     bx lr
-.size bc_a5_button_handler, .-bc_a5_button_handler
+.size _bc_a5_button_handler, .-_bc_a5_button_handler
 
 
 .end
