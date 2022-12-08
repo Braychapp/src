@@ -994,6 +994,8 @@ LEDaddress:
 a5_delay: .word 0 @creating a variable for the timeout
 a5_timeout: .word 0 @creating a variable for the delay
 current_delay: .word 0 @adding a variable to hold the current delay
+watchdog_refresh: .word 0 @making this for easy refreshing later
+is_button_pressed: .word 0 @if this is not 0 it means that the button was pressed
 
 .text
 _bc_a5_tick_handler:
@@ -1001,6 +1003,9 @@ _bc_a5_tick_handler:
     
     ldr r2, =a5_timeout
     str r0, [r2] @storing r0 into a5_timeout
+   
+    ldr r2, =watchdog_refresh
+    str r0, [r2] @storing the timeout here for easy refreshing
 
     ldr r0, [r2]
 
@@ -1050,9 +1055,7 @@ _bc_a5_tick_check:
 
     str r3, [r2] @storing the value back
 
-    bl mes_IWDGRefresh @refreshing the watchdog
-
-    @getting the current delay value
+      @getting the current delay value
     ldr r2, =current_delay
     ldr r3, [r2]
     subs r3, r3, #1
@@ -1062,6 +1065,11 @@ _bc_a5_tick_check:
     @if we haven't hit 0 do nothing
     bgt do_nothing
 
+    bl refresh_watchdog
+
+    bl mes_IWDGRefresh @refreshing the watchdog
+
+ 
     @if we have do something 
     bl toggle_all
     bl refresh_delay
@@ -1108,6 +1116,21 @@ refresh_delay:
     pop {lr}
 bx lr
 .size refresh_delay, .-refresh_delay
+
+
+refresh_watchdog:
+    push {lr}
+    @resetting the watchdog
+    ldr r2, =watchdog_refresh @make r2 equal to the memory address
+    ldr r3, [r2]
+    @right here r4 holds the delay
+
+    ldr r2, =a5_timeout
+    str r3, [r2]
+
+    pop {lr}
+    bx lr
+.size refresh_watchdog, .-refresh_watchdog
 
 
 .end
