@@ -1043,8 +1043,6 @@ _bc_a5_tick_check:
 
     ldr r2, =a5_timeout
     ldr r3, [r2]
-    @checking if r4 is 0 or less than 0 and if it is we do nothing
-    @we don't need to check r1 because they should only change within the same function
     subs r3, r3, #1 @#take 1 away from r0
 
     @if it's 0 or less than 0 we do nothing
@@ -1058,6 +1056,9 @@ _bc_a5_tick_check:
     ldr r2, =current_delay
     ldr r3, [r2]
     subs r3, r3, #1
+
+    @store decremented amount
+    str r3, [r2]
     @if we haven't hit 0 do nothing
     bgt do_nothing
 
@@ -1065,8 +1066,7 @@ _bc_a5_tick_check:
     bl toggle_all
     bl refresh_delay
 
-    pop {lr}
-    bx lr
+    bl do_nothing   
 
 
 .size _bc_a5_tick_check, .-_bc_a5_tick_check

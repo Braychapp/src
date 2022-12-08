@@ -2,17 +2,71 @@ Info : Listening on port 6666 for tcl connections
 Info : Listening on port 4444 for telnet connections
 Info : clock speed 1000 kHz
 Info : STLINK V2J37M26 (API v2) VID:PID 0483:374B
-Info : Target voltage: 2.931745
+Info : Target voltage: 2.930316
 Info : stm32f3x.cpu: hardware has 6 breakpoints, 4 watchpoints
 Info : starting gdb server for stm32f3x.cpu on pipe
 Info : accepting 'gdb' connection from pipe
 target halted due to debug-request, current mode: Thread 
-xPSR: 0x21010000 pc: 0x08007ea0 msp: 0x20007fb0
+xPSR: 0x61010000 pc: 0x08008742 msp: 0x20007f80
 Info : device id = 0x10036422
 Info : flash size = 256kbytes
 Info : Unable to match requested speed 1000 kHz, using 950 kHz
 Info : Unable to match requested speed 1000 kHz, using 950 kHz
 target halted due to debug-request, current mode: Thread 
 xPSR: 0x01000000 pc: 0x0800ce1c msp: 0x20008000
+Info : halted: PC: 0x080005b8
+Info : halted: PC: 0x080005ba
 Info : halted: PC: 0x080005c6
-Info : halted: PC: 0x0800060e
+Info : halted: PC: 0x080005c8
+Info : halted: PC: 0x080005cc
+Info : halted: PC: 0x08000612
+Info : halted: PC: 0x08000614
+Info : halted: PC: 0x08000616
+Info : halted: PC: 0x08000618
+Info : halted: PC: 0x0800061c
+Info : halted: PC: 0x080005c2
+Info : halted: PC: 0x08000566
+Info : halted: PC: 0x0800056a
+Info : halted: PC: 0x080082d0
+Info : halted: PC: 0x080005b8
+Info : halted: PC: 0x08000566
+Info : halted: PC: 0x0800056a
+Info : halted: PC: 0x080086e4
+Info : halted: PC: 0x080005b8
+Info : halted: PC: 0x080005b8
+Info : halted: PC: 0x080005b8
+Info : halted: PC: 0x080005b8
+Info : halted: PC: 0x080005b8
+Info : halted: PC: 0x080005b8
+Info : halted: PC: 0x080005b8
+Info : halted: PC: 0x080005b8
+Info : halted: PC: 0x080005b8
+Info : halted: PC: 0x080005b8
+Info : halted: PC: 0x080005b8
+Info : halted: PC: 0x080005b8
+Info : halted: PC: 0x080005b8
+Info : halted: PC: 0x080005b8
+Info : halted: PC: 0x080005b8
+Info : halted: PC: 0x080005b8
+Info : halted: PC: 0x080005b8
+Info : halted: PC: 0x080005b8
+Info : halted: PC: 0x080005b8
+Info : halted: PC: 0x080005b8
+Info : halted: PC: 0x080005b8
+Info : halted: PC: 0x080005b8
+Info : halted: PC: 0x080005b8
+Info : halted: PC: 0x080005b8
+Info : halted: PC: 0x080005b8
+Info : halted: PC: 0x08000566
+Info : halted: PC: 0x08000566
+Info : halted: PC: 0x08000566
+Info : halted: PC: 0x08000566
+Info : halted: PC: 0x08000566
+Info : halted: PC: 0x08000566
+Info : halted: PC: 0x08000566
+Info : halted: PC: 0x08000566
+Info : halted: PC: 0x08000566
+Info : halted: PC: 0x08000566
+Info : halted: PC: 0x08000566
+Info : halted: PC: 0x08000566
+Info : dropped 'gdb' connection

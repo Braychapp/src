@@ -2538,8 +2538,6 @@ _bc_a5_tick_check:
  80005a2:	4a28      	ldr	r2, [pc, #160]	; (8000644 <refresh_delay+0x36>)
     ldr r3, [r2]
  80005a4:	6813      	ldr	r3, [r2, #0]
-    @checking if r4 is 0 or less than 0 and if it is we do nothing
-    @we don't need to check r1 because they should only change within the same function
     subs r3, r3, #1 @#take 1 away from r0
  80005a6:	3b01      	subs	r3, #1
 
@@ -2560,20 +2558,22 @@ _bc_a5_tick_check:
  80005b2:	6813      	ldr	r3, [r2, #0]
     subs r3, r3, #1
  80005b4:	3b01      	subs	r3, #1
+
+    @store decremented amount
+    str r3, [r2]
+ 80005b6:	6013      	str	r3, [r2, #0]
     @if we haven't hit 0 do nothing
     bgt do_nothing
- 80005b6:	dcd6      	bgt.n	8000566 <do_nothing>
+ 80005b8:	dcd5      	bgt.n	8000566 <do_nothing>
 
     @if we have do something 
     bl toggle_all
- 80005b8:	f000 f805 	bl	80005c6 <toggle_all>
+ 80005ba:	f000 f804 	bl	80005c6 <toggle_all>
     bl refresh_delay
- 80005bc:	f000 f827 	bl	800060e <refresh_delay>
+ 80005be:	f000 f826 	bl	800060e <refresh_delay>
 
-    pop {lr}
- 80005c0:	f85d eb04 	ldr.w	lr, [sp], #4
-    bx lr
- 80005c4:	4770      	bx	lr
+    bl do_nothing   
+ 80005c2:	f7ff ffd0 	bl	8000566 <do_nothing>
 
 080005c6 <toggle_all>:
 
