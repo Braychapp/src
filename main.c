@@ -14,6 +14,7 @@ const uint32_t numLEDs = sizeof(LEDs)/sizeof(LEDs[0]);
 
 /* Private function prototypes -----------------------------------------------*/
 static void SystemClock_Config(void);
+int _bc_a5_tick_handler(int timeout, int delay);
 
 int main(int argc, char **argv)
 {
