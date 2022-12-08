@@ -134,7 +134,7 @@ void SysTick_Handler(void)
 
 void EXTI0_IRQHandler(void)
 {
-BSP_LED_Toggle(LED6);
+;
 HAL_GPIO_EXTI_IRQHandler(USER_BUTTON_PIN);
 }
 

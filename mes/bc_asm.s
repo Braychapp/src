@@ -1071,9 +1071,8 @@ _bc_a5_tick_check:
     ldr r2, =is_button_pressed
     ldr r3, [r2]
 
-    cmp r3, #0 @if the button is pressed
-    bgt button_was_pressed
-
+    cmp r3, #0 @if the button was pressed
+    
     @if the button has not been pushed
     bl refresh_watchdog    
 

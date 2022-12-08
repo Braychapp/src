@@ -275,15 +275,18 @@ return;
 
     if(fetch_status1) {
     // // Use a default value
-        timeout = 10000;
+        timeout = 1000;
     }   
+
+    //manipulating the timeout value
+    timeout = ((timeout * 32000) / ((4*2^6) * 1000));
 
     uint32_t delay;
     int fetch_status;
     fetch_status = fetch_uint32_arg(&delay);
 
     if(fetch_status) {
-        delay = 5000;
+        delay = 100;
     }
 
     _bc_a5_tick_handler(timeout, delay);    
