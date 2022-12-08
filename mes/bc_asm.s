@@ -1046,8 +1046,6 @@ _bc_a5_tick_check:
 
     ldr r2, =a5_timeout
     ldr r4, [r2]
-    @ldr r2, =a5_delay
-    @ldr r5, [r2]
 
     @checking if r4 is 0 or less than 0 and if it is we do nothing
     @we don't need to check r1 because they should only change within the same function
@@ -1056,30 +1054,67 @@ _bc_a5_tick_check:
     @if it's 0 or less than 0 we do nothing
     ble do_nothing
 
-    @for early testing only turning on an led if it gets here
-    mov r0, #1 @moving 1 into r0
-    bl BSP_LED_On
-    mov r0, #2
-    bl BSP_LED_On
-    mov r0, #2
-    bl BSP_LED_On
-    mov r0, #3
-    bl BSP_LED_On
-    mov r0, #4
-    bl BSP_LED_On
-    mov r0, #5
-    bl BSP_LED_On
-    mov r0, #6
-    bl BSP_LED_On
-    mov r0, #7
-    bl BSP_LED_On
+    ldr r2, =current_delay
+    ldr r6, [r2]
+    cmp r6, #0 @comparing the current delay to 0
+    beq refresh_delay
+    
 
+    subs r6, r6, #1 @taking one away from the delay variable
+    @if the delay is over it toggles the lights
+    beq toggle_all
+
+    ldr r2, =a5_timeout
+    str r4, [r2]
+
+    ldr r2, =current_delay
+    str r6, [r2]
+
+
+    bl mes_IWDGRefresh
     pop {lr}
     bx lr
 
 
 .size _bc_a5_tick_check, .-_bc_a5_tick_check
 
+
+toggle_all:
+push {lr}
+@for early testing only turning on an led if it gets here
+    mov r0, #0
+    bl BSP_LED_Toggle
+    mov r0, #1 @moving 1 into r0
+    bl BSP_LED_Toggle
+    mov r0, #2
+    bl BSP_LED_Toggle
+    mov r0, #3
+    bl BSP_LED_Toggle
+    mov r0, #4
+    bl BSP_LED_Toggle
+    mov r0, #5
+    bl BSP_LED_Toggle
+    mov r0, #6
+    bl BSP_LED_Toggle
+    mov r0, #7
+    bl BSP_LED_Toggle
+pop {lr}
+bx lr
+
+refresh_delay:
+push{r4-r6, lr}
+@refreshed the current delay to be the delay again
+ldr 
+
+    ldr r4, =a5_delay
+    ldr r5, [r4]
+    mov r6, r5
+
+    ldr r4, =current_delay
+    str r6, [r4]
+
+pop {lr}
+bx lr
 
 
 .end

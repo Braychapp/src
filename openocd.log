@@ -2,18 +2,40 @@ Info : Listening on port 6666 for tcl connections
 Info : Listening on port 4444 for telnet connections
 Info : clock speed 1000 kHz
 Info : STLINK V2J37M26 (API v2) VID:PID 0483:374B
-Info : Target voltage: 2.931745
+Info : Target voltage: 2.930316
 Info : stm32f3x.cpu: hardware has 6 breakpoints, 4 watchpoints
 Info : starting gdb server for stm32f3x.cpu on pipe
 Info : accepting 'gdb' connection from pipe
 target halted due to debug-request, current mode: Thread 
-xPSR: 0x61010000 pc: 0x080086ba msp: 0x20007f88
+xPSR: 0x21010000 pc: 0x0800828c msp: 0x20007fb0
 Info : device id = 0x10036422
 Info : flash size = 256kbytes
 Info : Unable to match requested speed 1000 kHz, using 950 kHz
 Info : Unable to match requested speed 1000 kHz, using 950 kHz
 target halted due to debug-request, current mode: Thread 
-xPSR: 0x01000000 pc: 0x0800cd9c msp: 0x20008000
-Info : halted: PC: 0x08000586
-Info : halted: PC: 0x0800806c
-Info : dropped 'gdb' connection
+xPSR: 0x01000000 pc: 0x0800cdd8 msp: 0x20008000
+Info : halted: PC: 0x080005a2
+Info : halted: PC: 0x080005a4
+Info : halted: PC: 0x080005a6
+Info : halted: PC: 0x080005a8
+Info : halted: PC: 0x080005aa
+Info : halted: PC: 0x080005ac
+Info : halted: PC: 0x080005ae
+Info : halted: PC: 0x080005b0
+Info : halted: PC: 0x080005b2
+Info : halted: PC: 0x080005b4
+Info : halted: PC: 0x080005b6
+Info : halted: PC: 0x080005b8
+Info : halted: PC: 0x080005ba
+Info : halted: PC: 0x08008108
+Info : halted: PC: 0x080005a2
+Info : halted: PC: 0x080005a4
+Info : halted: PC: 0x080005a6
+Info : halted: PC: 0x080005a8
+Info : halted: PC: 0x080005aa
+Info : halted: PC: 0x080005ac
+Info : halted: PC: 0x080005ae
+Info : halted: PC: 0x080005b0
+Info : halted: PC: 0x080005c4
+Info : halted: PC: 0x080005c6
+Info : halted: PC: 0x080005ca
