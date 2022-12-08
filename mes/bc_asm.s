@@ -998,6 +998,14 @@ watchdog_refresh: .word 0 @making this for easy refreshing later
 is_button_pressed: .word 0 @if this is not 0 it means that the button was pressed
 
 .text
+@
+@Function: _bc_watchdog_start
+@Description: This function gets the variables from the minicom menu
+@and gets the watchdog to start, it also starts the function in the
+@system tick handler
+@Parameters: int timeout, int delay
+@Returns: nothing
+@
 _bc_watchdog_start:
     push {lr}
     
@@ -1041,6 +1049,16 @@ bx lr
 @ encoded function. Necessary for interlinking between ARM and THUMB code.
 .type _bc_a5_tick_handler, %function @ Declares that the symbol is a function (not strictly required)
 
+@
+@Function: _bc_a5_tick_handler
+@Description: This function does almost everything for the assignment,
+@This function lives in the system tick handler and is always going off
+@comparing the values that are brought in from .word memory addresses tha have been 
+@set in the _bc_a5_watchdog_start function
+@the function also turns on and off LEDS and refreshed the watchdog so it runs infinitely
+@Parameters: none
+@Returns: nothing
+@
 _bc_a5_tick_handler:
     push {lr}
 
@@ -1082,7 +1100,12 @@ _bc_a5_tick_handler:
 
 .size _bc_a5_tick_handler, .-_bc_a5_tick_handler
 
-
+@
+@Function: toggle_all
+@Description: This function toggles all the leds
+@Parameters: none
+@Returns: nothing
+@
 toggle_all:
 push {lr}
     mov r0, #0
@@ -1105,7 +1128,12 @@ pop {lr}
 bx lr
 .size toggle_all, .-toggle_all
 
-
+@
+@Function: refresh_delay
+@Description: This refreshed the LED delay
+@Parameters: none
+@Returns: nothing
+@
 refresh_delay:
     push {lr}
     @resetting the delay
@@ -1123,7 +1151,12 @@ refresh_delay:
 bx lr
 .size refresh_delay, .-refresh_delay
 
-
+@
+@Function: refresh_watchdog
+@Description: this functino refreshes the watchdog timeout timer
+@Parameters: none
+@Returns: nothing
+@
 refresh_watchdog:
     push {lr}
     @resetting the watchdog
@@ -1132,7 +1165,7 @@ refresh_watchdog:
     @right here r3 holds the delay
 
     ldr r2, =a5_timeout
-    str r3, [r2]
+    str r3, [r2] @refreshing the timeout timer
 
     pop {lr}
     bx lr
@@ -1154,6 +1187,13 @@ refresh_watchdog:
 @ encoded function. Necessary for interlinking between ARM and THUMB code.
 .type _bc_a5_button_handler, %function @ Declares that the symbol is a function (not strictly required)
 
+@
+@Function: _bc_a5_button_handler
+@Description: This function changed the value of a memory address to tell the 
+@rest of the program to stop refreshing the watchdog timer
+@Parameters: none
+@Returns: nothing
+@
 _bc_a5_button_handler:
     push {lr}
     mov r3, #1 @moving 0 into r3 to indicate no more refreshing
