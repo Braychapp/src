@@ -993,6 +993,7 @@ LEDaddress:
 .data
 a5_delay: .word 0 @creating a variable for the timeout
 a5_timeout: .word 0 @creating a variable for the delay
+current_delay: .word 0 @adding a variable to hold the current delay
 
 .text
 _bc_a5_tick_handler:
@@ -1035,10 +1036,6 @@ bx lr
 @ encoded function. Necessary for interlinking between ARM and THUMB code.
 .type _bc_a5_tick_check, %function @ Declares that the symbol is a function (not strictly required)
 
-.data
-current_delay: .word 0 @adding a variable to hold the current delay
-
-.text
 _bc_a5_tick_check:
     push {lr}
 
@@ -1054,24 +1051,29 @@ _bc_a5_tick_check:
     @if it's 0 or less than 0 we do nothing
     ble do_nothing
 
+    @loading the value again just in case it was changed
+    bl mes_IWDGRefresh @refreshing the watchdog
+
     ldr r2, =current_delay
     ldr r6, [r2]
-    cmp r6, #0 @comparing the current delay to 0
-    beq refresh_delay
-    
-
-    subs r6, r6, #1 @taking one away from the delay variable
-    @if the delay is over it toggles the lights
-    beq toggle_all
 
     ldr r2, =a5_timeout
     str r4, [r2]
+
+
+    sub r6, r6, #1
 
     ldr r2, =current_delay
     str r6, [r2]
 
 
-    bl mes_IWDGRefresh
+    ldr r1, =current_delay
+    ldr r0, [r1]
+    
+     @taking one away from the delay variable
+    cmp r6, #0 @if the delay is over it toggles the lights
+    ble toggle_all
+
     pop {lr}
     bx lr
 
@@ -1098,23 +1100,34 @@ push {lr}
     bl BSP_LED_Toggle
     mov r0, #7
     bl BSP_LED_Toggle
+
+    @resetting the delay
+    ldr r2, =a5_delay @make r2 equal to the memory address
+    ldr r3, [r2]
+    @right here r4 holds the delay
+
+    ldr r2, =current_delay
+    str r3, [r2]
+
 pop {lr}
 bx lr
+.size toggle_all, .-toggle_all
+
 
 refresh_delay:
-push{r4-r6, lr}
-@refreshed the current delay to be the delay again
-ldr 
+    push {r4, lr}
+    @refreshed the current delay to be the delay again 
 
-    ldr r4, =a5_delay
-    ldr r5, [r4]
-    mov r6, r5
+    ldr r2, =a5_delay @make r2 equal to the memory address
+    ldr r3, [r2]
+    @right here r4 holds the delay
 
-    ldr r4, =current_delay
-    str r6, [r4]
+    ldr r2, =current_delay
+    str r3, [r2]
 
-pop {lr}
+    pop {r4, lr}
 bx lr
+.size refresh_delay, .-refresh_delay
 
 
 .end
