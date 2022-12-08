@@ -1108,6 +1108,7 @@ _bc_a5_tick_handler:
 @
 toggle_all:
 push {lr}
+@toggling all the leds in order
     mov r0, #0
     bl BSP_LED_Toggle
     mov r0, #1 
@@ -1139,7 +1140,7 @@ refresh_delay:
     @resetting the delay
     ldr r2, =a5_delay @make r2 equal to the memory address
     ldr r3, [r2]
-    @right here r4 holds the delay
+    @right here r3 holds the delay
 
     ldr r2, =current_delay
     str r3, [r2]
