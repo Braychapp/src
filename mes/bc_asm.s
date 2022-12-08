@@ -1042,37 +1042,28 @@ _bc_a5_tick_check:
     @checking values to see if anything has been loaded into them
 
     ldr r2, =a5_timeout
-    ldr r4, [r2]
-
+    ldr r3, [r2]
     @checking if r4 is 0 or less than 0 and if it is we do nothing
     @we don't need to check r1 because they should only change within the same function
-    subs r4, r4, #1 @#take 1 away from r0
+    subs r3, r3, #1 @#take 1 away from r0
 
     @if it's 0 or less than 0 we do nothing
     ble do_nothing
 
-    @loading the value again just in case it was changed
+    str r3, [r2] @storing the value back
+
     bl mes_IWDGRefresh @refreshing the watchdog
 
+    @getting the current delay value
     ldr r2, =current_delay
-    ldr r6, [r2]
+    ldr r3, [r2]
+    subs r3, r3, #1
+    @if we haven't hit 0 do nothing
+    bgt do_nothing
 
-    ldr r2, =a5_timeout
-    str r4, [r2]
-
-
-    sub r6, r6, #1
-
-    ldr r2, =current_delay
-    str r6, [r2]
-
-
-    ldr r1, =current_delay
-    ldr r0, [r1]
-    
-     @taking one away from the delay variable
-    cmp r6, #0 @if the delay is over it toggles the lights
-    ble toggle_all
+    @if we have do something 
+    bl toggle_all
+    bl refresh_delay
 
     pop {lr}
     bx lr
@@ -1083,10 +1074,9 @@ _bc_a5_tick_check:
 
 toggle_all:
 push {lr}
-@for early testing only turning on an led if it gets here
     mov r0, #0
     bl BSP_LED_Toggle
-    mov r0, #1 @moving 1 into r0
+    mov r0, #1 
     bl BSP_LED_Toggle
     mov r0, #2
     bl BSP_LED_Toggle
@@ -1100,7 +1090,13 @@ push {lr}
     bl BSP_LED_Toggle
     mov r0, #7
     bl BSP_LED_Toggle
+pop {lr}
+bx lr
+.size toggle_all, .-toggle_all
 
+
+refresh_delay:
+    push {lr}
     @resetting the delay
     ldr r2, =a5_delay @make r2 equal to the memory address
     ldr r3, [r2]
@@ -1109,23 +1105,7 @@ push {lr}
     ldr r2, =current_delay
     str r3, [r2]
 
-pop {lr}
-bx lr
-.size toggle_all, .-toggle_all
-
-
-refresh_delay:
-    push {r4, lr}
-    @refreshed the current delay to be the delay again 
-
-    ldr r2, =a5_delay @make r2 equal to the memory address
-    ldr r3, [r2]
-    @right here r4 holds the delay
-
-    ldr r2, =current_delay
-    str r3, [r2]
-
-    pop {r4, lr}
+    pop {lr}
 bx lr
 .size refresh_delay, .-refresh_delay
 
