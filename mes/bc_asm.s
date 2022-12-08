@@ -984,11 +984,11 @@ LEDaddress:
 @ This causes the assembler to use 4 byte alignment
 .syntax unified @ Sets the instruction set to the new unified ARM + THUMB
 @ instructions. The default is divided (separate instruction sets)
-.global _bc_a5_tick_handler @ Make the symbol name for the function visible to the linker
+.global _bc_watchdog_start @ Make the symbol name for the function visible to the linker
 .code 16 @ 16bit THUMB code (BOTH .code and .thumb_func are required)
 .thumb_func @ Specifies that the following symbol is the name of a THUMB
 @ encoded function. Necessary for interlinking between ARM and THUMB code.
-.type _bc_a5_tick_handler, %function @ Declares that the symbol is a function (not strictly required)
+.type _bc_watchdog_start, %function @ Declares that the symbol is a function (not strictly required)
 
 .data
 a5_delay: .word 0 @creating a variable for the timeout
@@ -998,7 +998,7 @@ watchdog_refresh: .word 0 @making this for easy refreshing later
 is_button_pressed: .word 0 @if this is not 0 it means that the button was pressed
 
 .text
-_bc_a5_tick_handler:
+_bc_watchdog_start:
     push {lr}
     
     ldr r2, =a5_timeout
@@ -1023,7 +1023,7 @@ _bc_a5_tick_handler:
 
 bx lr 
 
-.size _bc_a5_tick_handler, .-_bc_a5_tick_handler
+.size _bc_watchdog_start, .-_bc_watchdog_start
 
 
 .code 16 @ This directive selects the instruction set being generated.
@@ -1035,13 +1035,13 @@ bx lr
 @ This causes the assembler to use 4 byte alignment
 .syntax unified @ Sets the instruction set to the new unified ARM + THUMB
 @ instructions. The default is divided (separate instruction sets)
-.global _bc_a5_tick_check @ Make the symbol name for the function visible to the linker
+.global _bc_a5_tick_handler @ Make the symbol name for the function visible to the linker
 .code 16 @ 16bit THUMB code (BOTH .code and .thumb_func are required)
 .thumb_func @ Specifies that the following symbol is the name of a THUMB
 @ encoded function. Necessary for interlinking between ARM and THUMB code.
-.type _bc_a5_tick_check, %function @ Declares that the symbol is a function (not strictly required)
+.type _bc_a5_tick_handler, %function @ Declares that the symbol is a function (not strictly required)
 
-_bc_a5_tick_check:
+_bc_a5_tick_handler:
     push {lr}
 
     @checking values to see if anything has been loaded into them
@@ -1072,7 +1072,7 @@ _bc_a5_tick_check:
     ldr r3, [r2]
 
     cmp r3, #0 @if the button was pressed
-    
+
     @if the button has not been pushed
     bl refresh_watchdog    
 
@@ -1080,7 +1080,7 @@ _bc_a5_tick_check:
     bl do_nothing   
 
 
-.size _bc_a5_tick_check, .-_bc_a5_tick_check
+.size _bc_a5_tick_handler, .-_bc_a5_tick_handler
 
 
 toggle_all:
@@ -1139,21 +1139,35 @@ refresh_watchdog:
 .size refresh_watchdog, .-refresh_watchdog
 
 
-button_was_pressed:
-    push {lr}
+.code 16 @ This directive selects the instruction set being generated.
+@ The value 16 selects Thumb, with the value 32 selecting ARM.
+.text @ Tell the assembler that the upcoming section is to be considered
+@ assembly language instructions - Code section (text -> ROM)
+@@ Function Header Block
+.align 2 @ Code alignment - 2^n alignment (n=2)
+@ This causes the assembler to use 4 byte alignment
+.syntax unified @ Sets the instruction set to the new unified ARM + THUMB
+@ instructions. The default is divided (separate instruction sets)
+.global _bc_a5_button_handler @ Make the symbol name for the function visible to the linker
+.code 16 @ 16bit THUMB code (BOTH .code and .thumb_func are required)
+.thumb_func @ Specifies that the following symbol is the name of a THUMB
+@ encoded function. Necessary for interlinking between ARM and THUMB code.
+.type _bc_a5_button_handler, %function @ Declares that the symbol is a function (not strictly required)
+
+bc_a5_button_handler:
+push {lr}
     bl BSP_PB_GetState
     cmp r0, #0 @if the button was not pressed
     beq do_nothing
     @else if the button was pressed
 
-mov r3, #0
+    mov r3, #0 @moving 0 into r3 to indicate no more refreshing
     ldr r2, =watchdog_refresh
     str r3, [r2]
 
-
-
     pop {lr}
-bx lr
+    bx lr
+.size bc_a5_button_handler, .-bc_a5_button_handler
 
 
 .end
